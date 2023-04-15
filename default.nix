@@ -3,13 +3,10 @@
 #
 # SPDX-License-Identifier: MIT
 
-src: inputs: root:
+{ root, lib, flakelite, args }:
 let
-  inherit (inputs.nixpkgs.lib) findFirst optionalAttrs mapAttrs' nameValuePair;
-  inherit (inputs.flakelite.lib) autoImport ensureFn callAttrsAuto;
-
-  params = inputs.flakelite.lib // { inherit src inputs root; };
-  applyParams = v: ensureFn v params;
+  inherit (lib) findFirst optionalAttrs mapAttrs' nameValuePair;
+  inherit (flakelite) autoImport callFn callPkgs;
 
   elispPackage = findFirst (x: x != null) null [
     (root.elispPackage or null)
@@ -23,16 +20,16 @@ let
     (autoImport (root.nixDir + /packages) "elisp-packages")
   ];
 
-  elispPackages' = (applyParams elispPackages) //
+  elispPackages' = (callFn args elispPackages) //
     optionalAttrs (elispPackage != null) { "${root.name}" = elispPackage; };
 in
 rec {
   withOverlay = _: prev: {
     emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
-      (final: _: callAttrsAuto final elispPackages');
+      (final: _: callPkgs final elispPackages');
   };
   overlay = withOverlay;
-  checks = { emacs, ... }: mapAttrs'
+  checks = { emacs }: mapAttrs'
     (k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k})
     elispPackages';
 }

@@ -5,8 +5,8 @@
 
 {
   inputs.flakelite.url = "github:accelbread/flakelite";
-  outputs = { flakelite, ... }@inputs:
-    flakelite.lib.mkFlake ./. inputs {
+  outputs = { flakelite, ... }:
+    flakelite.lib.mkFlake ./. {
       outputs.flakeliteModule = import ./.;
     };
 }
