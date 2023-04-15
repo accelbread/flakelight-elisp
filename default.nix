@@ -5,7 +5,7 @@
 
 src: inputs: root:
 let
-  inherit (inputs.nixpkgs.lib) findFirst optionalAttrs;
+  inherit (inputs.nixpkgs.lib) findFirst optionalAttrs mapAttrs' nameValuePair;
   inherit (inputs.flakelite.lib) autoloadAttr ensureFn genPackages;
 
   params = inputs.flakelite.lib // { inherit src inputs root; };
@@ -32,4 +32,7 @@ rec {
       (final: _: genPackages final elispPackages');
   };
   overlay = withOverlay;
+  checks = { emacs, ... }: mapAttrs'
+    (k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k})
+    elispPackages';
 }
