@@ -3,15 +3,33 @@
 #
 # SPDX-License-Identifier: MIT
 
-src: inputs: root: rec {
+src: inputs: root:
+let
+  inherit (inputs.nixpkgs.lib) findFirst optionalAttrs;
+  inherit (inputs.flakelite.lib) autoloadAttr ensureFn genPackages;
+
+  params = inputs.flakelite.lib // { inherit src inputs root; };
+  applyParams = v: ensureFn v params;
+
+  elispPackage = findFirst (x: x != null) null [
+    (root.elispPackage or null)
+    (autoloadAttr root.nixDir "elispPackage")
+  ];
+
+  elispPackages = findFirst (x: x != null) { } [
+    (root.elispPackages or null)
+    (autoloadAttr root.nixDir "elispPackages")
+    (autoloadAttr (root.nixDir + /packages) "elispPackages")
+    (autoloadAttr (root.nixDir + /packages) "elisp-packages")
+  ];
+
+  elispPackages' = (applyParams elispPackages) //
+    optionalAttrs (elispPackage != null) { "${root.name}" = elispPackage; };
+in
+rec {
   withOverlay = _: prev: {
     emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
-      (final: _: builtins.mapAttrs
-        (_: v: final.callPackage v { })
-        ((root.elispPackages or { }) //
-          (if root ? elispPackage then {
-            "${root.name}" = root.elispPackage;
-          } else { })));
+      (final: _: genPackages final elispPackages');
   };
   overlay = withOverlay;
 }
