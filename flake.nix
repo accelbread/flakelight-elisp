@@ -7,6 +7,7 @@
   inputs.flakelite.url = "github:accelbread/flakelite";
   outputs = { flakelite, ... }:
     flakelite.lib.mkFlake ./. {
+      nixDir = ./.;
       outputs.flakeliteModule = import ./.;
     };
 }
