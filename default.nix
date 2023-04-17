@@ -32,6 +32,4 @@ rec {
   checks = { emacs }: mapAttrs'
     (k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k})
     elispPackages';
-  formatters."*.el" = { callPackage }:
-    callPackage ./packages/indent-elisp.nix { };
 }
