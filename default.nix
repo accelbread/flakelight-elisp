@@ -22,6 +22,13 @@ let
 
   elispPackages' = (callFn args elispPackages) //
     optionalAttrs (elispPackage != null) { "${root.name}" = elispPackage; };
+
+  formatter = { lib, emacs, writeScript }: writeScript "indent-elisp" ''
+    #!${lib.getExe emacs} --script
+    (find-file (nth 0 argv))
+    (indent-region (point-min) (point-max) nil)
+    (save-buffer)
+  '';
 in
 rec {
   withOverlay = _: prev: {
@@ -32,4 +39,5 @@ rec {
   checks = { emacs }: mapAttrs'
     (k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k})
     elispPackages';
+  formatters."*.el" = { callPackage }: callPackage formatter { };
 }
