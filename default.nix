@@ -8,16 +8,15 @@ let
   inherit (lib) findFirst optionalAttrs mapAttrs' nameValuePair;
   inherit (flakelite) autoImport callFn callPkgs;
 
-  elispPackage = findFirst (x: x != null) null [
-    (root.elispPackage or null)
-    (autoImport root.nixDir "elispPackage")
-  ];
+  elispPackage = root.elispPackage or (autoImport root.nixDir "elispPackage");
 
   elispPackages = findFirst (x: x != null) { } [
     (root.elispPackages or null)
-    (autoImport root.nixDir "elispPackages")
-    (autoImport (root.nixDir + /packages) "elispPackages")
-    (autoImport (root.nixDir + /packages) "elisp-packages")
+    (autoImport root.nixDir [
+      "elispPackages"
+      "packages/elispPackages"
+      "packages/elisp-packages"
+    ])
   ];
 
   elispPackages' = (callFn args elispPackages) //
