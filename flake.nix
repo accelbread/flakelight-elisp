@@ -1,12 +1,11 @@
-# flakelite-elisp -- Elisp module for flakelite
+# flakelight-elisp -- Elisp module for flakelight
 # Copyright (C) 2023 Archit Gupta <archit@accelbread.com>
 #
 # SPDX-License-Identifier: MIT
 
 {
-  inputs.flakelite.url = "github:accelbread/flakelite";
-  outputs = { flakelite, ... }:
-    flakelite ./. {
-      outputs.flakeliteModule = import ./.;
-    };
+  inputs.flakelight.url = "github:accelbread/flakelight";
+  outputs = { flakelight, ... }: flakelight ./. {
+    flakelightModule = ./flakelight-elisp.nix;
+  };
 }

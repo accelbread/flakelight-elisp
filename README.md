@@ -1,5 +1,5 @@
-# flakelite-elisp
+# flakelight-elisp
 
-Elisp module for [flakelite][1].
+Elisp module for [flakelight][1].
 
-[1]: https://github.com/accelbread/flakelite
+[1]: https://github.com/accelbread/flakelight
