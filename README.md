@@ -23,13 +23,8 @@ Adds build checks for the Elisp packages.
 
 ```nix
 {
-  inputs = {
-    flakelight.url = "github:accelbread/flakelight";
-    flakelight-zig.url = "github:accelbread/flakelight-elisp";
-  };
-  outputs = { flakelight, flakelight-elisp, ... }: flakelight ./. {
-    imports = [ flakelight-elisp.flakelightModules.default ];
-
+  inputs.flakelight-elisp.url = "github:accelbread/flakelight-elisp";
+  outputs = { flakelight-elisp, ... }: flakelight-elisp ./. {
     elispPackages.packageName = { elpaBuild }:
       elpaBuild {
         # package build configuration
