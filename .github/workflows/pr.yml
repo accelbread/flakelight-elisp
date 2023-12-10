@@ -1,0 +1,13 @@
+name: PR checks
+
+on:
+  pull_request:
+
+jobs:
+  run-checks:
+    name: Run checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@master
+      - run: nix flake check --all-systems
