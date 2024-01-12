@@ -3,14 +3,14 @@
 #
 # SPDX-License-Identifier: MIT
 
-{ config, lib, flakelight, autoloadArgs, ... }:
+{ config, lib, flakelight, moduleArgs, ... }:
 let
   inherit (lib) mapAttrs mapAttrs' mkIf mkMerge mkOption nameValuePair;
   inherit (lib.types) lazyAttrsOf;
   inherit (flakelight) autoImportArgs;
   inherit (flakelight.types) packageDef;
 
-  autoLoads = autoImportArgs config.nixDir autoloadArgs [
+  autoLoads = autoImportArgs config.nixDir moduleArgs [
     "elispPackages"
     "packages/elispPackages"
     "packages/elisp-packages"
