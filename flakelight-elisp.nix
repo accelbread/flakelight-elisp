@@ -7,10 +7,10 @@
 let
   inherit (lib) mapAttrs mapAttrs' mkIf mkMerge mkOption nameValuePair;
   inherit (lib.types) lazyAttrsOf;
-  inherit (flakelight) autoImportArgs;
-  inherit (flakelight.types) packageDef;
+  inherit (flakelight) autoImport;
+  inherit (flakelight.types) optCallWith packageDef;
 
-  autoLoads = autoImportArgs config.nixDir moduleArgs [
+  autoLoads = autoImport config.nixDir [
     "elispPackages"
     "packages/elispPackages"
     "packages/elisp-packages"
@@ -18,7 +18,7 @@ let
 in
 {
   options.elispPackages = mkOption {
-    type = lazyAttrsOf packageDef;
+    type = optCallWith moduleArgs (lazyAttrsOf packageDef);
     default = { };
   };
 
