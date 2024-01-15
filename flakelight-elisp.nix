@@ -7,14 +7,7 @@
 let
   inherit (lib) mapAttrs mapAttrs' mkIf mkMerge mkOption nameValuePair;
   inherit (lib.types) lazyAttrsOf;
-  inherit (flakelight) autoImport;
   inherit (flakelight.types) optCallWith packageDef;
-
-  autoLoads = autoImport config.nixDir [
-    "elispPackages"
-    "packages/elispPackages"
-    "packages/elisp-packages"
-  ];
 in
 {
   options.elispPackages = mkOption {
@@ -23,8 +16,6 @@ in
   };
 
   config = mkMerge [
-    (mkIf (autoLoads != null) { elispPackages = autoLoads; })
-
     (mkIf (config.elispPackages != { }) rec {
       overlay = _: prev: {
         emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
@@ -38,5 +29,11 @@ in
         (k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k})
         config.elispPackages;
     })
+    {
+      nixDirAliases.elispPackages = [
+        "packages/elispPackages"
+        "packages/elisp-packages"
+      ];
+    }
   ];
 }
