@@ -5,11 +5,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1705053175,
-        "narHash": "sha256-eWNzInngZJwx0coWsefYvoMCRWWQTwieInnckTb9H6I=",
+        "lastModified": 1705289754,
+        "narHash": "sha256-d6BcOnviHEm8LQEJfT66u4MLHMLDaqbv4e1NK93d9Gk=",
         "owner": "nix-community",
         "repo": "flakelight",
-        "rev": "333a383ff0fdca8bc8eb405ebf3cc9d3c45964d8",
+        "rev": "589ee5ba7a9705933dd3a6ab067e8e999a94803e",
         "type": "github"
       },
       "original": {
