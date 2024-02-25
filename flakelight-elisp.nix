@@ -18,7 +18,7 @@ in
   config = mkMerge [
     (mkIf (config.elispPackages != { }) rec {
       overlay = _: prev: {
-        emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope'
+        emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope
           (final: _:
             mapAttrs (_: v: final.callPackage v { }) config.elispPackages);
       };
