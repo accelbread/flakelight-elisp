@@ -5,8 +5,14 @@
 
 {
   inputs.flakelight.url = "github:nix-community/flakelight";
-  outputs = { flakelight, ... }: flakelight ./. {
-    imports = [ flakelight.flakelightModules.extendFlakelight ];
-    flakelightModule = ./flakelight-elisp.nix;
-  };
+  outputs =
+    { flakelight, ... }:
+    flakelight ./. {
+      imports = [ flakelight.flakelightModules.extendFlakelight ];
+      flakelightModule = ./flakelight-elisp.nix;
+      formatters = { pkgs, lib, ... }: {
+        "*.nix" = "${lib.getExe pkgs.nixfmt} -w78";
+        "*.md" = "${lib.getExe pkgs.mdformat} --wrap 80";
+      };
+    };
 }

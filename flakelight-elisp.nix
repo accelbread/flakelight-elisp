@@ -3,9 +3,22 @@
 #
 # SPDX-License-Identifier: MIT
 
-{ config, lib, flakelight, moduleArgs, ... }:
+{
+  config,
+  lib,
+  flakelight,
+  moduleArgs,
+  ...
+}:
 let
-  inherit (lib) mapAttrs mapAttrs' mkIf mkMerge mkOption nameValuePair;
+  inherit (lib)
+    mapAttrs
+    mapAttrs'
+    mkIf
+    mkMerge
+    mkOption
+    nameValuePair
+    ;
   inherit (lib.types) lazyAttrsOf;
   inherit (flakelight.types) optCallWith packageDef;
 in
@@ -18,16 +31,20 @@ in
   config = mkMerge [
     (mkIf (config.elispPackages != { }) rec {
       overlay = _: prev: {
-        emacsPackagesFor = emacs: (prev.emacsPackagesFor emacs).overrideScope
-          (final: _:
-            mapAttrs (_: v: final.callPackage v { }) config.elispPackages);
+        emacsPackagesFor =
+          emacs:
+          (prev.emacsPackagesFor emacs).overrideScope (
+            final: _: mapAttrs (_: v: final.callPackage v { }) config.elispPackages
+          );
       };
 
       withOverlays = overlay;
 
-      checks = { emacs, ... }: mapAttrs'
-        (k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k})
-        config.elispPackages;
+      checks =
+        { emacs, ... }:
+        mapAttrs' (
+          k: v: nameValuePair ("elispPackages-" + k) emacs.pkgs.${k}
+        ) config.elispPackages;
     })
     {
       nixDirAliases.elispPackages = [

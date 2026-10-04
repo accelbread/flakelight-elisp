@@ -2,8 +2,6 @@
 
 Elisp module for [flakelight][1].
 
-[1]: https://github.com/nix-community/flakelight
-
 ## Additional options
 
 Set `elispPackages` to an attribute set of package definitions for Elisp
@@ -32,3 +30,5 @@ Adds build checks for the Elisp packages.
   };
 }
 ```
+
+[1]: https://github.com/nix-community/flakelight
